@@ -39,7 +39,7 @@ jobs:
         run: npm run build
 
       - name: Test & coverage
-        run: npm run cover:ng-catcher
+        run: npm run cover:mocha
       - name: Report to Codacy
         uses: codacy/codacy-coverage-reporter-action@master
         with:
