@@ -1,0 +1,57 @@
+{
+  "name": "@public-js/ng-pkg-keeper",
+  "version": "1.0.0-beta.1",
+  "description": "Add description",
+  "scripts": {
+    "build": "npm run clean:dist && tsc",
+    "clean:dist": "rimraf dist",
+    "clean:jest": "rimraf jest.results.json",
+    "clean:mocha": "rimraf coverage && rimraf .nyc_output",
+    "cover:jest": "npm run clean:jest && jest --ci --maxWorkers=3 --coverage --json --outputFile=jest.results.json",
+    "cover:mocha": "npm run clean:mocha && nyc --reporter=lcov npm run test:mocha",
+    "npm:pub": "npm run build && npm publish --access public",
+    "npm:pub-test": "npm run build && npm publish --access public --dry-run",
+    "test:jest": "jest",
+    "test:mocha": "cross-env TS_NODE_PROJECT=\"tsconfig.mocha.json\" mocha",
+    "ts:watch": "tsc -w --preserveWatchOutput"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "devDependencies": {
+    "@types/chai": "^4.2.14",
+    "@types/mocha": "^8.2.0",
+    "@types/node": "^14.6.0",
+    "@typescript-eslint/eslint-plugin": "^4.0.1",
+    "@typescript-eslint/parser": "^4.0.1",
+    "chai": "^4.2.0",
+    "cross-env": "^7.0.3",
+    "eslint": "^7.8.1",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-import-resolver-typescript": "^2.3.0",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-json": "^2.1.2",
+    "eslint-plugin-prettier": "^3.1.4",
+    "mocha": "^8.2.1",
+    "nyc": "^15.1.0",
+    "prettier": "^2.1.1",
+    "rimraf": "^3.0.0",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.0.0"
+  },
+  "files": [
+    "dist"
+  ],
+  "license": "MIT",
+  "author": "Public JS <public-js@muffin.blue> (https://github.com/public-js/public-js)",
+  "bugs": {
+    "url": "https://github.com/public-js/ng-pkg-keeper/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/public-js/ng-pkg-keeper.git"
+  },
+  "homepage": "https://github.com/public-js/ng-pkg-keeper",
+  "engines": {
+    "node": ">=10.3.0"
+  }
+}

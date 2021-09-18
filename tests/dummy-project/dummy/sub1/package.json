@@ -1,0 +1,7 @@
+{
+  "name": "@dummy/sub1",
+  "version": "1.0.0",
+  "peerDependencies": {
+    "c": "*"
+  }
+}

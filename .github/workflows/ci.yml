@@ -1,0 +1,62 @@
+name: CI
+
+on:
+  push:
+    branches: [ dev, main ]
+  pull_request:
+    branches: [ dev, main ]
+
+jobs:
+
+  ci:
+    name: Build/Coverage
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout commit
+        uses: actions/checkout@v2
+
+      - name: Setup node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+
+      - name: Get npm cache path
+        id: npm-cache-path
+        run: echo "::set-output name=path::$(npm config get cache)"
+      - name: Check for npm cache
+        uses: actions/cache@v2
+        id: npm-cache
+        with:
+          path: ${{ steps.npm-cache-path.outputs.path }}
+          key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
+
+      - name: Clean install node modules (if no cache)
+        if: steps.npm-cache.outputs.cache-hit != 'true'
+        run: npm ci
+      - name: Install node modules (cached)
+        if: steps.npm-cache.outputs.cache-hit == 'true'
+        run: npm i
+
+      - name: Build project
+        run: npm run build
+
+      - name: Test & coverage
+        run: npm run cover:mocha
+
+      - name: Report to Codacy
+        uses: codacy/codacy-coverage-reporter-action@master
+        with:
+          project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
+          coverage-reports: 'coverage/lcov.info'
+      - name: Report to Code Climate
+        uses: paambaati/codeclimate-action@v2.7.5
+        env:
+          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+        with:
+          coverageLocations: ${{ github.workspace }}/coverage/lcov.info:lcov
+#      - name: Report to Codecov
+#        uses: codecov/codecov-action@v1
+#        with:
+#          token: ${{ secrets.CODECOV_TOKEN }}
+#          files: ./coverage/cobertura-coverage.xml
+#          flags: dev,jasmine

@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "allowUnreachableCode": false,
+    "declaration": true,
+    "importHelpers": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "pretty": true,
+    "strict": true,
+    "target": "es2017",
+    "allowJs": false,
+    "checkJs": false,
+    "skipLibCheck": false,
+    "noImplicitAny": true,
+    "types": [],
+    "lib": [
+      "es2020"
+    ]
+  }
+}

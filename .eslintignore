@@ -1,0 +1,7 @@
+!.eslintrc.base.js
+!.eslintrc.js
+!.mocharc.js
+!.prettierrc.js
+!jest.config.js
+node_modules/
+dist/
