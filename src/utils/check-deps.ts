@@ -34,8 +34,11 @@ export function checkLocal(
         .filter((item: string) => item !== 'tslib')
         .forEach((item: string) => {
             const treat: TTreatTypes =
-            typeof treatAs === 'function' ? treatAs(pkg.name, 'local', item) : treatAs;
-            tempReport.set(item, { data: getTreatIcon(treat) + 'Listed in local package.json, unused', treat });
+                typeof treatAs === 'function' ? treatAs(pkg.name, 'local', item) : treatAs;
+            tempReport.set(item, {
+                data: getTreatIcon(treat) + 'Listed in local package.json, unused',
+                treat,
+            });
         });
 
     const reportEntries = Array.from(tempReport.entries());
