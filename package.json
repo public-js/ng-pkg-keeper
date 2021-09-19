@@ -1,6 +1,6 @@
 {
   "name": "@public-js/ng-pkg-keeper",
-  "version": "1.0.0-beta.1",
+  "version": "1.0.0-beta.2",
   "description": "Add description",
   "scripts": {
     "build": "npm run clean:dist && tsc",
