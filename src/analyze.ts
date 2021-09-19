@@ -69,7 +69,7 @@ export function analyze(params: IAnalyzeInput): IPackage[] {
                 report: data,
                 hasErrors,
                 hasWarnings,
-            } = checkImports(pkg, packages, params.treatImports || null);
+            } = checkImports(pkg, packages, params.bannedImports || [], params.treatImports || null);
             Array.from(data.entries()).forEach(([key, report]: [string, IObjectTypes]) => {
                 const item = pkg.importsReport.get(key) || {};
                 item.Imports = report;
@@ -149,7 +149,7 @@ export function analyze(params: IAnalyzeInput): IPackage[] {
 
 function analysisPreChecks(params: IAnalyzeInput): void {
     if (params.packageJson && !existsSync(params.packageJson)) {
-        throw new Error(`The provided package.json path (${params.packageJson}) does not exist`);
+        throw new Error(`The provided package.json path (${ params.packageJson }) does not exist`);
     }
     if (params.checkDeps === 'full' && !params.packageJson) {
         throw new Error('Can not fully check dependencies without package.json');

@@ -51,6 +51,7 @@ export interface IAnalyzeInput {
     packages: ReadonlyArray<IPackageInput>;
     matchExt?: string[];
     ignoreImports?: string[];
+    bannedImports?: string[];
     packageJson?: string;
     countHits?: true;
     checkImports?: true;
@@ -89,7 +90,7 @@ export type TImportsReports = Map<string, IObject>;
 export type TTreatTypes = 'err' | 'warn' | null;
 export type TTreatCallbackImport = (
     pkgName: string,
-    importType: 'absSame' | 'relExt',
+    importType: 'absSame' | 'relExt' | 'banned',
     importPath: string
 ) => TTreatTypes;
 export type TTreatCallbackDep = (pkgName: string, depType: 'local' | 'root', depName: string) => TTreatTypes;

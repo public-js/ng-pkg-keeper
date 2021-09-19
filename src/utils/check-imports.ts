@@ -6,6 +6,7 @@ import { getTreatIcon } from './get-treat-icon';
 export function checkImports(
     pkg: IPackage,
     packages: IPackage[],
+    bannedImports: string[],
     treatAs: TTreatTypes | TTreatCallbackImport
 ): { report: TImportsReport; hasErrors: boolean; hasWarnings: boolean } {
     const tempReport = new Map<string, { data: IObjectTypes; treat: TTreatTypes }>([]);
@@ -61,6 +62,16 @@ export function checkImports(
                     tempReport.set(item, { data: getTreatIcon(treat) + 'External relative import', treat });
                 }
             });
+        });
+    }
+
+    if (bannedImports.length > 0) {
+        pkg.imports.importsUnique.forEach((item: string) => {
+            if (bannedImports.some((banned: string) => item.includes(banned))) {
+                const treat: TTreatTypes =
+                    typeof treatAs === 'function' ? treatAs(pkg.name, 'banned', item) : treatAs;
+                tempReport.set(item, { data: getTreatIcon(treat) + 'Banned import', treat });
+            }
         });
     }
 
