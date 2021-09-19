@@ -197,7 +197,7 @@ function packageReportLog(pkg: IPackage, params: IAnalyzeInput, timeStart: numbe
 
     console.group();
     console.table(packageReport);
-    if (pkg.importsReport.size > 0) {
+    if (Object.keys(importsReport).length > 0) {
         console.table(importsReport);
     }
     console.groupEnd();
