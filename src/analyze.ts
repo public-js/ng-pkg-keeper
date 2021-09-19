@@ -1,12 +1,6 @@
 import { existsSync } from 'fs';
 import { resolve } from 'path';
 
-import { checkLocal } from './utils/check-deps';
-import { checkImports } from './utils/check-imports';
-import { checkPackageVersion } from './utils/check-package-version';
-import { countImportHits } from './utils/count-import-hits';
-import { getImports } from './utils/get-imports';
-import { getPackageJson } from './utils/get-package-json';
 import {
     IAnalyzeInput,
     IObject,
@@ -16,7 +10,18 @@ import {
     IPackageJsonData,
     packageImportsDefault,
 } from './types';
+import { checkLocal } from './utils/check-deps';
+import { checkImports } from './utils/check-imports';
+import { checkPackageVersion } from './utils/check-package-version';
+import { countImportHits } from './utils/count-import-hits';
+import { getImports } from './utils/get-imports';
+import { getPackageJson } from './utils/get-package-json';
 
+/**
+ * Run the packages analysis
+ * @param {IAnalyzeInput} params - Analysis configuration
+ * @returns {IPackage[]}
+ */
 export function analyze(params: IAnalyzeInput): IPackage[] {
     const timeStart = Date.now();
     analysisPreChecks(params);
@@ -69,7 +74,7 @@ export function analyze(params: IAnalyzeInput): IPackage[] {
                 report: data,
                 hasErrors,
                 hasWarnings,
-            } = checkImports(pkg, packages, params.treatImports || null);
+            } = checkImports(pkg, packages, params.bannedImports || [], params.treatImports || null);
             Array.from(data.entries()).forEach(([key, report]: [string, IObjectTypes]) => {
                 const item = pkg.importsReport.get(key) || {};
                 item.Imports = report;
