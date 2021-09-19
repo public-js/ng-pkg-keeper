@@ -138,9 +138,9 @@ export function analyze(params: IAnalyzeInput): IPackage[] {
         }
     } else if (packages.some((pkg: IPackage) => pkg.hasWarnings)) {
         if (params.logToConsole) {
-            console.error('Warnings found. See the report above.');
+            console.warn('Warnings found. See the report above.');
         } else {
-            console.error('Warnings found. To see the report pass \'logToConsole\' to parameters.');
+            console.warn('Warnings found. To see the report pass \'logToConsole\' to parameters.');
         }
     }
 
@@ -197,7 +197,7 @@ function packageReportLog(pkg: IPackage, params: IAnalyzeInput, timeStart: numbe
 
     console.group();
     console.table(packageReport);
-    if (pkg.importsReport.size > 0) {
+    if (Object.keys(importsReport).length > 0) {
         console.table(importsReport);
     }
     console.groupEnd();
