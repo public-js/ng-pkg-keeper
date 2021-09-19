@@ -21,6 +21,14 @@ export interface IPackageImports {
     importsTotal: number;
     importsMatched: string[];
     importsUnique: string[];
+    matchedMap: Map<string, string[]>;
+    packageJsonFiles: string[];
+    subpackages: {
+        names: string[];
+        paths: string[];
+        nameToPath: Map<string, string>;
+        pathToName: Map<string, string>;
+    };
 }
 
 export const packageImportsDefault: IPackageImports = {
@@ -29,6 +37,14 @@ export const packageImportsDefault: IPackageImports = {
     importsTotal: 0,
     importsMatched: [],
     importsUnique: [],
+    matchedMap: new Map<string, string[]>(),
+    packageJsonFiles: [],
+    subpackages: {
+        names: [],
+        paths: [],
+        nameToPath: new Map<string, string>(),
+        pathToName: new Map<string, string>(),
+    },
 };
 
 export interface IAnalyzeInput {
@@ -58,6 +74,7 @@ export interface IPackageJsonData {
     peerDependencies?: {
         [name: string]: string;
     };
+    ngPackage?: unknown;
 }
 
 export type IObjectTypes = number | string;

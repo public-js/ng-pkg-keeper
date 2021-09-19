@@ -1,4 +1,4 @@
-import { resolve } from 'path';
+import { dirname, resolve } from 'path';
 
 import { IObjectTypes, IPackage, TImportsReport, TTreatCallbackImport, TTreatTypes } from '../types';
 import { getTreatIcon } from './get-treat-icon';
@@ -10,9 +10,24 @@ export function checkImports(
 ): { report: TImportsReport; hasErrors: boolean; hasWarnings: boolean } {
     const tempReport = new Map<string, { data: IObjectTypes; treat: TTreatTypes }>([]);
 
-    const selfImports: string[] = pkg.imports.importsUnique.filter((item: string) =>
-        item.startsWith(pkg.name)
-    );
+    const selfImports: string[] = pkg.imports.importsUnique
+        .filter((item: string) => item.startsWith(pkg.name))
+        .filter((item: string) => {
+            if (pkg.imports.subpackages.paths.length === 0) {
+                return true;
+            }
+
+            const subName = pkg.imports.subpackages.names.find((name) => item.startsWith(name));
+            if (!subName) {
+                return false;
+            }
+            const subPath = pkg.imports.subpackages.nameToPath.get(subName);
+            const filesWithImport = pkg.imports.matchedMap.get(item) || [];
+            if (!subPath) {
+                return false;
+            }
+            return filesWithImport.some((filePath: string) => filePath.startsWith(subPath));
+        });
 
     selfImports.forEach((item: string) => {
         const treat: TTreatTypes =
@@ -30,12 +45,22 @@ export function checkImports(
             .filter((path: string) => path !== pkg.path);
 
         relativeImports.forEach((item: string) => {
-            const path: string = resolve(pkg.path + '/' + item);
-            if (otherPackages.some((otherPkg: string) => path.includes(otherPkg))) {
-                const treat: TTreatTypes =
-                    typeof treatAs === 'function' ? treatAs(pkg.name, 'relExt', item) : treatAs;
-                tempReport.set(item, { data: getTreatIcon(treat) + 'External relative import', treat });
-            }
+            const filesWithImport = pkg.imports.matchedMap.get(item) || [];
+            filesWithImport.forEach((file: string) => {
+                const importFrom: string = resolve(dirname(file), item);
+                const otherSubpackages: string[] = pkg.imports.subpackages.paths.filter(
+                    (subPath: string) => !file.includes(subPath)
+                );
+                if (
+                    [...otherPackages, ...otherSubpackages].some((otherPkg: string) =>
+                        importFrom.includes(otherPkg)
+                    )
+                ) {
+                    const treat: TTreatTypes =
+                        typeof treatAs === 'function' ? treatAs(pkg.name, 'relExt', item) : treatAs;
+                    tempReport.set(item, { data: getTreatIcon(treat) + 'External relative import', treat });
+                }
+            });
         });
     }
 
