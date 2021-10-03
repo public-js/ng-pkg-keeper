@@ -3,5 +3,10 @@
   "version": "1.0.0",
   "peerDependencies": {
     "c": "*"
+  },
+  "ngPackage": {
+    "lib": {
+      "entryFile": "public_api.ts"
+    }
   }
 }
