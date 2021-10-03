@@ -1,2 +1,1 @@
-export { analyze } from './analyze';
-export { IAnalyzeInput, IPackageInput, IPackage } from './types';
+export { analyze } from './lib';

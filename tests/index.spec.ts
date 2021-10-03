@@ -3,26 +3,24 @@ import { readFileSync } from 'fs';
 import 'mocha';
 import { resolve } from 'path';
 
-import { analyze, IPackageInput } from '../src';
+import { analyze } from '../src';
 
 describe('passing', () => {
     const listPath: string = resolve(__dirname, './dummy-project/projects-list.json');
     const projectsList: string[] = JSON.parse(readFileSync(listPath, 'utf8'));
 
-    const packages: IPackageInput[] = projectsList.map((project: string) => ({
-        name: '@' + project,
-        path: resolve(__dirname, './dummy-project/' + project),
-    }));
+    const packagesPaths = projectsList.map((project: string) => resolve(__dirname, './dummy-project/' + project));
 
     const analysis = analyze({
-        packages,
+        rootPath: resolve(__dirname, './dummy-project'),
+        packagesPaths,
         matchExt: ['.ts'],
-        packageJson: resolve(__dirname, './dummy-project/package.json'),
-        countHits: true,
         checkImports: true,
         checkDeps: 'local',
         checkPackageVersion: true,
         logToConsole: true,
+        logStats: true,
+        countHits: true,
         // throwError: true,
     });
 
